@@ -1,0 +1,87 @@
+{{- $imagectx := dict "ctx" . "defaultregistry" .Values.submgr.image.registry }}
+{{- $pullpolicyctx := dict "ctx" . "defaultpullpolicy" .Values.submgr.imagePullPolicy }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.deploymentname.submgr" . }}
+  namespace: {{ include "common.namespace.platform" . }}
+  labels:
+    app: {{ include "common.namespace.platform" . }}-{{ include "common.name.submgr" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.submgr.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "common.namespace.platform" . }}-{{ include "common.name.submgr" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        # submgr 관련 설정값이 1비트라도 바뀌면 해시값이 변하여 Pod를 재시작시킵니다.
+        checksum/config: {{ .Values.submgr | toJson | sha256sum }}
+        {{- if .Values.submgr.annotations }}
+        {{- .Values.submgr.annotations | nindent 8 -}}
+        {{- end }}
+      labels:
+        app: {{ include "common.namespace.platform" . }}-{{ include "common.name.submgr" . }}
+        release: {{ .Release.Name }}
+    spec:
+      hostname: {{ include "common.name.submgr" . }}
+      imagePullSecrets:
+        - name: {{ include "common.dockerregistry.credential" $imagectx }}
+      containers:
+        - name: {{ include "common.containername.submgr" . }}
+          image: {{ include "common.dockerregistry.url" $imagectx }}/{{ .Values.submgr.image.name }}:{{ .Values.submgr.image.tag }}
+          imagePullPolicy: {{ include "common.dockerregistry.pullpolicy" $pullpolicyctx }}
+          command: ["/submgr"]
+          args: ["-f", "/cfg/submgr-config.yaml"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "common.configmapname.submgr" . }}-env
+            - configMapRef:
+                name: {{ include "common.configmapname.dbaas" . }}-appconfig
+          ports:
+            - name: subscription
+              containerPort: 8088
+              protocol: TCP
+            - name: http
+              containerPort: {{ include "common.serviceport.submgr.http" . }}
+              protocol: TCP
+            - name: rmrroute
+              containerPort: {{ include "common.serviceport.submgr.rmr.route" . }}
+              protocol: TCP
+            - name: rmrdata
+              containerPort: {{ include "common.serviceport.submgr.rmr.data" . }}
+              protocol: TCP
+            - name: grpc
+              containerPort: 50051
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /cfg
+          livenessProbe:
+            httpGet:
+              path: ric/v1/health/alive
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: ric/v1/health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 15
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: submgrcfg
+            items:
+              - key: submgrcfg
+                path: submgr-config.yaml
+                mode: 0644
+              - key: submgrutartg
+                path: submgr-uta-rtg.rt
+                mode: 0644

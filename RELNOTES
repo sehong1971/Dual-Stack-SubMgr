@@ -1,0 +1,76 @@
+
+This file is not up-to-date!
+
+### v0.10.8
+* Replacing deprecated SDL APIs
+
+### v0.10.7
+* Xapp-frame version update
+* Dockerfile correction for test applications
+
+### v0.10.6
+* Dockerfile correction, update builder image
+* Fix Subscription Delete Response in e2ap wrapper
+* Update ASN1-C generated E2AP encode/decode
+
+### v0.10.5
+* Dockerfile correction, main binary not copied
+
+### v0.10.4
+* Configmap usage introduced for K8s based deployments
+
+### v0.10.3
+* The following tools made available in the final docker image: iputils-ping, net-tools, curl and tcpdump
+
+### v0.10.2
+* Taking in use the most recent RMr version
+
+### v0.10.1
+* Sequential execution of message handling to avoid parallel read/write of internal hash maps
+
+### v0.10.0
+* Tracking Mbuf in transaction table
+
+### v0.9.0
+* Communicating RICsubscriptionDeleteResponse to routing manager
+* Updated transaction handling
+
+### v0.8.0
+* Handle RICsubscriptionDeleteResponse message
+
+### v0.7.2
+* Correction for E2AP PDU handling
+* Correction for Transaction Table handling
+
+### v0.7.1
+* Verification of RICsubscriptionDeleteRequest message handling
+
+### v0.7.0
+* Handle RICsubscriptionDeleteRequest message
+
+### v0.6.0
+* Capability to track and retrieve transactions
+* Signal subscription related route creation towards Rtmgr
+
+### v0.5.0
+* Introduces ASN1-C generated E2AP encode/decode
+* Introduces RCO_RAWDATA and E2T_RAWDATA env variables on order to inject initial encoded messge in hex format into stub component for testing purposes
+* Receives and validates Subscription Response type messages
+* Improved request and response error handling (invalid or malformed messages in sunny day cases)
+* Introduces RCO_SEED_SN env variable
+
+### v0.4.0
+
+### v0.3.0
+* Introduces SUBMGR_SEED_SN env variable to initialize the sequence
+* Stores Subscription ID as uint16
+
+### v0.2.0
+
+### v0.1.1
+* Dockerfile updates
+
+### v0.1.0
+* Receives and Forwards RMR Subscription Requests
+* Introduces RCO (Stub xApp) and E2T (Stub Platform Component) for testing purposes
+* Builder and Deployer scripts and manifests 

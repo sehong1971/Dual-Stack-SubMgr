@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  # 이름을 grpc용으로 변경 (ric-common에 정의되어 있지 않다면 수동 입력 가능)
+  name: service-{{ include "common.namespace.platform" . }}-{{ include "common.name.submgr" . }}-grpc
+  namespace: {{ include "common.namespace.platform" . }}
+spec:
+  selector:
+    app: {{ include "common.namespace.platform" . }}-{{ include "common.name.submgr" . }}
+    release: {{ .Release.Name }}
+  clusterIP: None
+  ports:
+  - name: grpc
+    port: 50051
+    protocol: TCP
+    targetPort: grpc

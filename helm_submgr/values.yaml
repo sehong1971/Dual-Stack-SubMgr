@@ -1,0 +1,22 @@
+
+#################################################################
+# Application configuration defaults.
+#################################################################
+# application image
+
+submgr:
+  imagePullPolicy: IfNotPresent
+  image:
+    registry: "localhost:5001"
+    name: ric-plt-ds-submgr
+    tag: 0.1.8
+  service:
+    subscription:
+      port: 8088
+    http:
+      port: 8080
+    rmr:
+      port: 4560
+    grpc:
+      port: 50051
+  replicaCount: 1

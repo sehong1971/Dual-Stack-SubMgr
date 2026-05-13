@@ -1,0 +1,6 @@
+dependencies:
+- name: ric-common
+  repository: http://127.0.0.1:8090
+  version: 3.3.2
+digest: sha256:4722953aa4853abc808f2923e99247b4b55ff7d17ed852b6f3e6ebfa6cb12db4
+generated: "2026-05-08T11:39:58.748663993+09:00"

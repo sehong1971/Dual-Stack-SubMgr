@@ -1,0 +1,40 @@
+{
+    "local": {
+        "host": ":8080"
+    },
+    "logger": {
+        "level": 4
+    },
+    "rmr": {
+       "protPort": "tcp:14560",
+       "maxSize": 8192,
+       "numWorkers": 1,
+       "txMessages": ["RIC_SUB_REQ", "RIC_SUB_DEL_REQ"],
+       "rxMessages": ["RIC_SUB_RESP", "RIC_SUB_FAILURE", "RIC_SUB_DEL_RESP", "RIC_SUB_DEL_FAILURE", "RIC_INDICATION"]
+    },
+    "db": {
+        "host": "localhost",
+        "port": 6379,
+        "namespaces": ["sdl", "rnib"]
+    },
+    "rtmgr" : {
+      "HostAddr" : "localhost",
+      "port" : "8989",
+      "baseUrl" : "/"
+    },
+    "controls": {
+      "e2tSubReqTimeout_ms": 2000,
+      "e2tSubDelReqTime_ms": 2000,
+      "e2tRecvMsgTimeout_ms": 2000,
+      "e2tMaxSubReqTryCount": 2,
+      "e2tMaxSubDelReqTryCount": 2,
+      "readSubsFromDb": "true",
+      "dbTryCount": 2,
+      "dbRetryForever": "false",
+      "waitRouteCleanup_ms": 100,
+      "subscription": {
+          "host": "localhost:8088",
+          "timeout": 2
+      }
+    }
+}
